@@ -4,6 +4,10 @@
   "description": "Script that hits the Spotify API to create a playlist with the top 5 songs from a list of artists",
   "main": "main.js",
   "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "querystring": "^0.2.0",
+    "request": "^2.83.0",
     "superagent": "^3.6.1"
   },
   "devDependencies": {},

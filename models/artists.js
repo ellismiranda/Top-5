@@ -19,9 +19,13 @@ async function getArtistId(name, access_token) {
 }
 
 // Using a SID, gets the top songs of the artist
+// Returns: array of top songs
 async function getArtistTopSongs(name, access_token) {
     artistId = await getArtistId(name, access_token);
-    
+    res = await superagent.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks`)
+              .query({country: 'US'})
+              .set('Authorization', 'Bearer ' + access_token);
+    return res.body.tracks;
 }
 
 //because why not

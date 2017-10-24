@@ -6,5 +6,5 @@ function getUserPlaylists(userId, access_token) {
 }
 
 module.exports = {
-  getPlaylists
+  getUserPlaylists
 }

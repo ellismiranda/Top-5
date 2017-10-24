@@ -24,8 +24,9 @@ function getArtistId(name, access_token) {
 }
 
 // Using a SID, gets the top songs of the artist
-function getArtistTopSongs(name, access_token) {
-  artistId = getArtistId(name, access_token);
+async function getArtistTopSongs(name, access_token) {
+    artistId = await getArtistId(name, access_token);
+    
 }
 
 //because why not

@@ -16,7 +16,8 @@ var client_id = '3257bc393bf04ff9a2e31e8f0a193cc1'; // Your client id
 var client_secret = '699390eee74a496384ea255870b4ba6b'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-const superagent = require('superagent');
+const playlists = require('./models/playlists.js');
+const artists = require('./models/artists.js');
 
 /**
  * Generates a random string containing numbers and letters
@@ -104,14 +105,14 @@ app.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log('GET BODY: ', body);
-          //MY NEW CODE
-          superagent.get(`https://api.spotify.com/v1/users/${body.id}/playlists`)
-                    .set('Authorization', 'Bearer ' + access_token)
-                    .end((err, res) => {
-                      if (err) console.log('ERROR: ', err);
-                      else console.log(res.body.items[0]);
-                    })
+          //MY NEW CODE - testing area, commenting out for later
+          // artists.getArtistByName('Charleee Muse', access_token).then( (res, err) => {
+          //   if (err) console.log('ERROR');
+          //   else {
+          //     console.log(res.body.artists.items);
+          //     console.log('SUCCESS');
+          //   }
+          // })
         });
 
         // we can also pass the token to the browser to make requests from there

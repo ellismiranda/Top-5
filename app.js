@@ -16,7 +16,6 @@ var client_id = '3257bc393bf04ff9a2e31e8f0a193cc1'; // Your client id
 var client_secret = '699390eee74a496384ea255870b4ba6b'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-const potato = require('./blah.js');
 const superagent = require('superagent');
 
 /**
@@ -95,7 +94,7 @@ app.get('/callback', function(req, res) {
         access_token = body.access_token,
         refresh_token = body.refresh_token;
 
-        potato(access_token);
+        console.log(access_token);
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -147,7 +146,7 @@ app.get('/refresh_token', function(req, res) {
   };
 
   request.post(authOptions, function(error, response, body) {
-    potato(body.access_token);
+    console.log(body.access_token);
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
       res.send({

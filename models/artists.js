@@ -10,17 +10,12 @@ function getArtistByName(name, access_token) {
 
 // Returns the SID of the first artist in the list of artists gotten from getArtistByName
 // This will return a specific flag if there are no artists returned.
-function getArtistId(name, access_token) {
-  return getArtistByName(name, access_token).then((res, err) => {
-    if (err) error(err);
-    else {
-      artists = res.body.artists.items;
-      if (artists[0]) {
-        return artists[0].id;
-      }
-      return -1;
-    }
-  });
+async function getArtistId(name, access_token) {
+  res = await getArtistByName(name, access_token);
+  artists = res.body.artists.items;
+  if (artists[0]) {
+    return artists[0].id;
+  }
 }
 
 // Using a SID, gets the top songs of the artist

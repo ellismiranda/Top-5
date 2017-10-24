@@ -1,5 +1,6 @@
 const superagent = require('superagent');
 
+// make a check for whether or not anything is returned based on this Promise
 function getArtistByName(name, access_token) {
   const qName = nameToQ(name);
   console.log(qName);

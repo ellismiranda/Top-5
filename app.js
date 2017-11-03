@@ -18,6 +18,7 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 const playlists = require('./models/playlists.js');
 const artists = require('./models/artists.js');
+const { parseIDsFromList } = require('./models/tools.js')
 
 /**
  * Generates a random string containing numbers and letters
@@ -47,7 +48,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -92,10 +93,12 @@ app.get('/callback', function(req, res) {
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
 
+        // used for spotify API calls
         access_token = body.access_token,
+        // used to get a new access_token
         refresh_token = body.refresh_token;
 
-        console.log(access_token);
+        // console.log(access_token);
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -105,7 +108,14 @@ app.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          artists.getArtistTopSongs('Muse', access_token);
+          userId = body.id;
+          // artists.getArtistTopSongs('Muse', access_token).then( (res, err) => {
+          //   console.log(parseIDsFromList(res));
+          // });
+          playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
+            if (err) console.log('ERROR:',err);
+            else console.log(res);
+          })
         });
 
         // we can also pass the token to the browser to make requests from there

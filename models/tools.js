@@ -1,13 +1,22 @@
 
 
 function parseIDsFromList(topSongs) {
-  IDS = []
+  IDs = []
   topSongs.forEach( (entry) => {
-    IDS.push(entry.id);
+    IDs.push(entry.id);
   });
-  return IDS;
+  return IDs;
+}
+
+function createURIListFromIDs(songIds) {
+  URIs = []
+  songIds.forEach( (songId) => {
+    URIs.push("spotify:track:" + songId)
+  });
+  return { "uris": URIs };
 }
 
 module.exports = {
   parseIDsFromList,
+  createURIListFromIDs
 }

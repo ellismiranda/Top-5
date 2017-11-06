@@ -18,7 +18,7 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 const playlists = require('./models/playlists.js');
 const artists = require('./models/artists.js');
-const { parseIDsFromList } = require('./models/tools.js')
+const { parseIDsFromList, createURIListFromIDs } = require('./models/tools.js')
 
 /**
  * Generates a random string containing numbers and letters

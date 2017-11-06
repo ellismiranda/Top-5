@@ -108,14 +108,19 @@ app.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          userId = body.id;
-          // artists.getArtistTopSongs('Muse', access_token).then( (res, err) => {
-          //   console.log(parseIDsFromList(res));
-          // });
-          playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
-            if (err) console.log('ERROR:',err);
-            else console.log(res);
-          })
+          const userId = body.id;
+          artists.getArtistTopSongs('Muse', access_token).then( (res, err) => {
+            const uris = createURIListFromIDs(parseIDsFromList(res));
+            playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
+              if (err) console.log('ERROR:',err);
+              const playlistId = res.body.id;
+              playlists.addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then ( (res, err) => {
+                if (err) console.log('ERROR', err);
+                else console.log('SUCCESS');
+              })
+            })
+          });
+
         });
 
         // we can also pass the token to the browser to make requests from there

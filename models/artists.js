@@ -21,11 +21,31 @@ async function getArtistId(name, access_token) {
 // Using a SID, gets the top songs of the artist
 // Returns: array of top songs
 async function getArtistTopSongs(name, access_token) {
+  try {
     artistId = await getArtistId(name, access_token);
     res = await superagent.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks`)
               .query({country: 'US'})
               .set('Authorization', 'Bearer ' + access_token);
     return res.body.tracks;
+  } catch (err) {
+    console.log('Unable to get Top Songs for ', name);
+    return null;
+  }
+}
+
+//takes in a list of artist names to parse and get music from
+async function getTopSongsFromArtists(artists, access_token) {
+  var tracks = [];
+  var promises = artists.map( (artist) => {
+    return getArtistTopSongs(artist, access_token).then( (res, err) => {
+      return res;
+    })
+  });
+  Promise.all(promises).then( (topSongs) => {
+    tracks = tracks.concat.apply([], topSongs);
+  })
+  console.log(tracks.length);
+  return tracks;
 }
 
 //because why not
@@ -36,5 +56,6 @@ function error(err) {
 module.exports = {
   getArtistByName,
   getArtistId,
-  getArtistTopSongs
+  getArtistTopSongs,
+  getTopSongsFromArtists,
 }

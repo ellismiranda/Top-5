@@ -1,12 +1,9 @@
 
-
 function parseIDsFromList(topSongs) {
   IDs = []
   topSongs.forEach( (entry) => {
-    console.log('parsing id from', entry);
     if (entry != null) {
       IDs.push(entry.id);
-      console.log('parsed id from', entry);
     }
   });
   return IDs;
@@ -15,14 +12,21 @@ function parseIDsFromList(topSongs) {
 function createURIListFromIDs(songIds) {
   URIs = []
   songIds.forEach( (songId) => {
-    console.log('getting uri from', songId);
     URIs.push("spotify:track:" + songId)
-    console.log('got uri from', songId);
   });
   return { "uris": URIs };
 }
 
+function getDateString() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  const today = new Date();
+  const day = today.getDate();
+  const month = today.getMonth();
+  return months[month] + " " + day;
+}
+
 module.exports = {
   parseIDsFromList,
-  createURIListFromIDs
+  createURIListFromIDs,
+  getDateString
 }

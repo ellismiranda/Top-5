@@ -108,20 +108,8 @@ app.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           const userId = body.id;
-          const artists = ['Muse', 'The Pretty Reckless', 'Rise Against', 'Katy Perry', 'Rhianna', 'Kanye West', 'Jon Bellion'];
-          var topSongPromise = return getTopSongsFromArtists(artists, access_token).then( (res, err) => {
-            console.log(res);
-            // const uris = createURIListFromIDs(parseIDsFromList(res));
-            // playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
-            //   if (err) console.log('ERROR CREATING PLAYLIST:',err);
-            //   const playlistId = res.body.id;
-            //   playlists.addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then ( (res, err) => {
-            //     if (err) console.log('ERROR ADDING SONGS TO PLAYLIST', err);
-            //     else console.log('SUCCESS');
-            //   })
-            // })
-          });
-
+          const artists = ['2pac', 'daft punk', 'marshmallow', 'katy perry', 'the frontbottoms', 'tool'];
+          playlists.createTopSongsPlaylist(artists, userId, access_token);
         });
 
         // we can also pass the token to the browser to make requests from there

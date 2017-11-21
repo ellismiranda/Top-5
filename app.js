@@ -16,7 +16,7 @@ const env = require('node-env-file');
 env(__dirname + '/.env');
 
 const playlists = require('./models/playlists.js');
-const artists = require('./models/artists.js');
+const { getTopSongsFromArtists } = require('./models/artists.js');
 const { parseIDsFromList, createURIListFromIDs } = require('./models/tools.js')
 
 /**
@@ -106,21 +106,23 @@ app.get('/callback', function(req, res) {
         };
 
         // use the access token to access the Spotify Web API
-        // request.get(options, function(error, response, body) {
-        //   const userId = body.id;
-        //   artists.getArtistTopSongs('Muse', access_token).then( (res, err) => {
-        //     const uris = createURIListFromIDs(parseIDsFromList(res));
-        //     playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
-        //       if (err) console.log('ERROR:',err);
-        //       const playlistId = res.body.id;
-        //       playlists.addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then ( (res, err) => {
-        //         if (err) console.log('ERROR', err);
-        //         else console.log('SUCCESS');
-        //       })
-        //     })
-        //   });
-        //
-        // });
+        request.get(options, function(error, response, body) {
+          const userId = body.id;
+          const artists = ['Muse', 'The Pretty Reckless', 'Rise Against', 'Katy Perry', 'Rhianna', 'Kanye West', 'Jon Bellion'];
+          var topSongPromise = return getTopSongsFromArtists(artists, access_token).then( (res, err) => {
+            console.log(res);
+            // const uris = createURIListFromIDs(parseIDsFromList(res));
+            // playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
+            //   if (err) console.log('ERROR CREATING PLAYLIST:',err);
+            //   const playlistId = res.body.id;
+            //   playlists.addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then ( (res, err) => {
+            //     if (err) console.log('ERROR ADDING SONGS TO PLAYLIST', err);
+            //     else console.log('SUCCESS');
+            //   })
+            // })
+          });
+
+        });
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +

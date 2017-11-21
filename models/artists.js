@@ -30,7 +30,7 @@ async function getArtistTopSongs(name, access_token) {
               .set('Authorization', 'Bearer ' + access_token);
     return res.body.tracks;
   } catch (err) {
-    console.log('Unable to get Top Songs for ', name);
+    console.log('Unable to get Top Songs for', name);
     return null;
   }
 }

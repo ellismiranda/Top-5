@@ -1,6 +1,6 @@
 const superagent = require('superagent');
 const { getArtistByName, getArtistId, getArtistTopSongs, getTopSongsFromArtists} = require('./artists');
-const { parseIDsFromList, createURIListFromIDs } = require('./tools');
+const { parseIDsFromList, createURIListFromIDs, getDateString } = require('./tools');
 
 
 function getUserPlaylists(userId, access_token) {
@@ -32,7 +32,7 @@ async function createTopSongsPlaylist(artists, userId, access_token) {
   Promise.all(promises).then( (topSongs) => {
     tracks = tracks.concat.apply([], topSongs);
     const uris = createURIListFromIDs(parseIDsFromList(tracks));
-    createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
+    createPlaylist(userId, access_token, "Top-10 : " + getDateString()).then( (res, err) => {
       if (err) console.log('ERROR CREATING PLAYLIST:', err);
       const playlistId = res.body.id;
       addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then( (err, res) => {

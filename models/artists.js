@@ -8,6 +8,8 @@ function getArtistByName(name, access_token) {
 
 }
 
+
+
 // Returns the SID of the first artist in the list of artists gotten from getArtistByName
 // This will return a specific flag if there are no artists returned.
 async function getArtistId(name, access_token) {
@@ -33,21 +35,6 @@ async function getArtistTopSongs(name, access_token) {
   }
 }
 
-//takes in a list of artist names to parse and get music from
-async function getTopSongsFromArtists(artists, access_token) {
-  var tracks = [];
-  var promises = artists.map( (artist) => {
-    return getArtistTopSongs(artist, access_token).then( (res, err) => {
-      return res;
-    })
-  });
-  Promise.all(promises).then( (topSongs) => {
-    tracks = tracks.concat.apply([], topSongs);
-  })
-  console.log(tracks.length);
-  return tracks;
-}
-
 //because why not
 function error(err) {
   console.log('ERROR:\n', err);
@@ -57,5 +44,4 @@ module.exports = {
   getArtistByName,
   getArtistId,
   getArtistTopSongs,
-  getTopSongsFromArtists,
 }

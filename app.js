@@ -12,9 +12,8 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = '3257bc393bf04ff9a2e31e8f0a193cc1'; // Your client id
-var client_secret = '699390eee74a496384ea255870b4ba6b'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+const env = require('node-env-file');
+env(__dirname + '/.env');
 
 const playlists = require('./models/playlists.js');
 const artists = require('./models/artists.js');
@@ -52,9 +51,9 @@ app.get('/login', function(req, res) {
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
-      client_id: client_id,
+      client_id: process.env.CLIENT_ID,
       scope: scope,
-      redirect_uri: redirect_uri,
+      redirect_uri: process.env.REDIRECT_URI,
       state: state
     }));
 });
@@ -81,11 +80,11 @@ app.get('/callback', function(req, res) {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
-        redirect_uri: redirect_uri,
+        redirect_uri: process.env.REDIRECT_URI,
         grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        'Authorization': 'Basic ' + (new Buffer(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'))
       },
       json: true
     };
@@ -107,21 +106,21 @@ app.get('/callback', function(req, res) {
         };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          const userId = body.id;
-          artists.getArtistTopSongs('Muse', access_token).then( (res, err) => {
-            const uris = createURIListFromIDs(parseIDsFromList(res));
-            playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
-              if (err) console.log('ERROR:',err);
-              const playlistId = res.body.id;
-              playlists.addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then ( (res, err) => {
-                if (err) console.log('ERROR', err);
-                else console.log('SUCCESS');
-              })
-            })
-          });
-
-        });
+        // request.get(options, function(error, response, body) {
+        //   const userId = body.id;
+        //   artists.getArtistTopSongs('Muse', access_token).then( (res, err) => {
+        //     const uris = createURIListFromIDs(parseIDsFromList(res));
+        //     playlists.createPlaylist(userId, access_token, "Top-10").then( (res, err) => {
+        //       if (err) console.log('ERROR:',err);
+        //       const playlistId = res.body.id;
+        //       playlists.addSongsToPlaylistFromURIs(userId, access_token, playlistId, uris).then ( (res, err) => {
+        //         if (err) console.log('ERROR', err);
+        //         else console.log('SUCCESS');
+        //       })
+        //     })
+        //   });
+        //
+        // });
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -146,7 +145,7 @@ app.get('/refresh_token', function(req, res) {
   var refresh_token = req.query.refresh_token;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
-    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+    headers: { 'Authorization': 'Basic ' + (new Buffer(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')) },
     form: {
       grant_type: 'refresh_token',
       refresh_token: refresh_token
